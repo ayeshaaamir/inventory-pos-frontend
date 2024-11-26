@@ -4,3 +4,7 @@ export interface ProductData {
   price: number;
   stock: number;
 }
+
+export interface DeleteProductData {
+  barcode: string
+}
