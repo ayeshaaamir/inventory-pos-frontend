@@ -80,7 +80,6 @@ const Dashboard = () => {
 
         <Grid item xs={12} md={4}>
           <Paper className="cursor-pointer p-4">
-            {/* Pass the desired URL as an argument */}
             <Typography
               onClick={() => handleNavigateToAnotherPage("/payment")}
               variant="h6"
@@ -92,7 +91,6 @@ const Dashboard = () => {
 
         <Grid item xs={12} md={4}>
           <Paper className="cursor-pointer p-4">
-            {/* Pass the desired URL as an argument */}
             <Typography
               onClick={() => handleNavigateToAnotherPage("/view-products")}
               variant="h6"
