@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addEmployee } from "../../services/employeeService";
@@ -21,6 +28,12 @@ const AddEmployeeForm: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +42,10 @@ const AddEmployeeForm: React.FC = () => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,24 +57,34 @@ const AddEmployeeForm: React.FC = () => {
     try {
       await addEmployee(formData);
       setLoading(false);
-      navigate("/dashboard");
+
+      setSnackbarMessage("Employee registered successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err: unknown) {
       setLoading(false);
 
       if (axios.isAxiosError(err)) {
-        console.error("Axios Error:", err.response?.data);
-
         const data = err.response?.data as ErrorResponse;
         if (data?.error) {
           setError(data.error);
+          setSnackbarMessage(data.error);
         } else if (data?.message) {
           setError(data.message);
+          setSnackbarMessage(data.message);
         } else {
-          setError("Unexpected error occured.");
+          setError("An unexpected error occurred.");
+          setSnackbarMessage("An unexpected error occurred.");
         }
       } else {
-        setError("Password length must not be at least 6 characters long or email is incorrect.");
+        setError("An unexpected error occurred.");
+        setSnackbarMessage("An unexpected error occurred.");
       }
+
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -80,6 +107,7 @@ const AddEmployeeForm: React.FC = () => {
           value={formData.first_name}
           onChange={handleChange}
           margin="normal"
+          required
         />
         <TextField
           label="Last Name"
@@ -89,6 +117,7 @@ const AddEmployeeForm: React.FC = () => {
           value={formData.last_name}
           onChange={handleChange}
           margin="normal"
+          required
         />
         <TextField
           label="Username"
@@ -98,16 +127,18 @@ const AddEmployeeForm: React.FC = () => {
           value={formData.username}
           onChange={handleChange}
           margin="normal"
+          required
         />
         <TextField
           label="Password"
           variant="outlined"
           fullWidth
           name="password"
+          type="password"
           value={formData.password}
           onChange={handleChange}
           margin="normal"
-          type="password"
+          required
         />
         <TextField
           label="Email"
@@ -117,6 +148,7 @@ const AddEmployeeForm: React.FC = () => {
           value={formData.email}
           onChange={handleChange}
           margin="normal"
+          required
         />
         <Box className="mt-4">
           <Button
@@ -129,6 +161,21 @@ const AddEmployeeForm: React.FC = () => {
           </Button>
         </Box>
       </form>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          variant="filled"
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
