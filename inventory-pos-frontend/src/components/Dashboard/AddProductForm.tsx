@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { addProduct } from "../../services/addProduct";
 import { ProductData } from "../../interfaces/productData";
+import { addProduct } from "../../services/inventoryService";
 
 const AddProductForm: React.FC = () => {
   const [formData, setFormData] = useState<ProductData>({
