@@ -11,11 +11,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addEmployee } from "../../services/employeeService";
 import { EmployeeData } from "../../interfaces/employeeTypes";
-
-interface ErrorResponse {
-  error?: string;
-  message?: string;
-}
+import { ErrorResponse } from "../../interfaces/errorResponse";
 
 const AddEmployeeForm: React.FC = () => {
   const [formData, setFormData] = useState<EmployeeData>({
