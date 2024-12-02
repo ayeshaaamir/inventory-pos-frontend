@@ -1,7 +1,8 @@
 import "./App.css";
+import { Button } from 'primereact/button';   
 
 function App() {
-  return <h1 className="text-2xl font-bold underline">Hello world!</h1>;
+  return <Button label="Show" />;
 }
 
 export default App;
