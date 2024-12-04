@@ -1,0 +1,33 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #42a5f5, #7986cb);
+  padding: 20px;
+}
+
+.login-card {
+  width: 400px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.p-checkbox-label {
+  margin-left: 8px;
+}
+
+.p-button {
+  width: 100%;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}

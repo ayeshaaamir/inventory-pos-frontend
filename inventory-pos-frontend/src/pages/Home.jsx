@@ -1,10 +1,11 @@
-import React from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Carousel } from "primereact/carousel";
+import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 
 const Home = () => {
+  const navigate = useNavigate();
   const features = [
     {
       title: "Real-Time Inventory",
@@ -49,6 +50,7 @@ const Home = () => {
             label="Login"
             icon="pi pi-sign-in"
             className="p-button-raised p-button-rounded"
+            onClick={() => navigate("/login")}
           />
         </div>
       </section>
