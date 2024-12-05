@@ -7,8 +7,12 @@ const useInventory = () => {
   const [categories, setCategories] = useState([]);
 
   const fetchInventory = async () => {
-    const data = await inventoryService.getInventory();
-    setInventory(data.inventory);
+    try {
+      const data = await inventoryService.getInventory();
+      setInventory(data.inventory);
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+    }
   };
 
   const fetchCategories = async () => {
@@ -21,18 +25,39 @@ const useInventory = () => {
   };
 
   const addProduct = async (product) => {
-    await inventoryService.addProduct(product);
-    fetchInventory();
+    try {
+      await inventoryService.addProduct(product);
+      setInventory((prevInventory) => [...prevInventory, product]);
+    } catch (error) {
+      console.error("Error adding product:", error);
+      throw error;
+    }
   };
 
   const updateProduct = async (product, barcode) => {
-    await inventoryService.updateProduct(product, barcode);
-    fetchInventory();
+    try {
+      await inventoryService.updateProduct(product, barcode);
+      setInventory((prevInventory) =>
+        prevInventory.map((item) =>
+          item.barcode === barcode ? { ...item, ...product } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw error;
+    }
   };
 
   const deleteProduct = async (barcode) => {
-    await inventoryService.deleteProduct(barcode);
-    fetchInventory();
+    try {
+      await inventoryService.deleteProduct(barcode);
+      setInventory((prevInventory) =>
+        prevInventory.filter((item) => item.barcode !== barcode)
+      );
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      throw error;
+    }
   };
 
   useEffect(() => {
