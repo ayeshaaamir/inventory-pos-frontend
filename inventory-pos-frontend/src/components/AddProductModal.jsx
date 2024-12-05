@@ -31,19 +31,23 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
         category_id: editProduct.category_id || null,
       });
     } else {
-      setProduct({
-        color: "",
-        description: "",
-        design_no: "",
-        item_name: "",
-        price: "",
-        size: "",
-        stock: "",
-        barcode: "",
-        category_id: null,
-      });
+      resetForm();
     }
   }, [editProduct]);
+
+  const resetForm = () => {
+    setProduct({
+      color: "",
+      description: "",
+      design_no: "",
+      item_name: "",
+      price: "",
+      size: "",
+      stock: "",
+      barcode: "",
+      category_id: null,
+    });
+  };
 
   const handleSave = async () => {
     const payload = {
@@ -67,7 +71,6 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
       } else {
         await addProduct(payload);
       }
-      onHide();
 
       toast.current.show({
         severity: "success",
@@ -75,9 +78,11 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
         detail: successMessage,
         life: 3000,
       });
-      window.location.reload();
+
+      resetForm();
+      onHide();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.current.show({
         severity: "error",
         summary: "Error",
@@ -92,16 +97,19 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
   return (
     <>
       <Toast ref={toast} />
-
       <Dialog
         visible={visible}
-        onHide={onHide}
+        onHide={() => {
+          resetForm();
+          onHide();
+        }}
         header={editProduct ? "Edit Product" : "Add Product"}
       >
         <div className="p-fluid">
           <div className="p-field">
-            <label>Category</label>
+            <label htmlFor="category">Category</label>
             <Dropdown
+              id="category"
               value={categories.find(
                 (category) => category.id === product.category_id
               )}
@@ -111,12 +119,12 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
                 setProduct({ ...product, category_id: e.value.id })
               }
               placeholder="Select Category"
-              required
             />
           </div>
           <div className="p-field">
-            <label>Color</label>
+            <label htmlFor="color">Color</label>
             <InputText
+              id="color"
               value={product.color}
               onChange={(e) =>
                 setProduct({ ...product, color: e.target.value })
@@ -124,8 +132,9 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
             />
           </div>
           <div className="p-field">
-            <label>Description</label>
+            <label htmlFor="description">Description</label>
             <InputText
+              id="description"
               value={product.description}
               onChange={(e) =>
                 setProduct({ ...product, description: e.target.value })
@@ -133,8 +142,9 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
             />
           </div>
           <div className="p-field">
-            <label>Design No.</label>
+            <label htmlFor="design_no">Design No.</label>
             <InputText
+              id="design_no"
               value={product.design_no}
               onChange={(e) =>
                 setProduct({ ...product, design_no: e.target.value })
@@ -142,8 +152,9 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
             />
           </div>
           <div className="p-field">
-            <label>Product Name</label>
+            <label htmlFor="item_name">Product Name</label>
             <InputText
+              id="item_name"
               value={product.item_name}
               onChange={(e) =>
                 setProduct({ ...product, item_name: e.target.value })
@@ -151,30 +162,33 @@ const AddProductModal = ({ visible, onHide, editProduct }) => {
             />
           </div>
           <div className="p-field">
-            <label>Price</label>
+            <label htmlFor="price">Price</label>
             <InputNumber
+              id="price"
               value={product.price}
               onValueChange={(e) => setProduct({ ...product, price: e.value })}
             />
           </div>
           <div className="p-field">
-            <label>Size</label>
+            <label htmlFor="size">Size</label>
             <InputText
+              id="size"
               value={product.size}
               onChange={(e) => setProduct({ ...product, size: e.target.value })}
             />
           </div>
           <div className="p-field">
-            <label>Stock</label>
+            <label htmlFor="stock">Stock</label>
             <InputNumber
+              id="stock"
               value={product.stock}
               onValueChange={(e) => setProduct({ ...product, stock: e.value })}
             />
           </div>
           {editProduct && (
             <div className="p-field">
-              <label>Barcode</label>
-              <InputText value={product.barcode} disabled={true} />
+              <label htmlFor="barcode">Barcode</label>
+              <InputText id="barcode" value={product.barcode} disabled={true} />
             </div>
           )}
         </div>
