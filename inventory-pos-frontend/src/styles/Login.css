@@ -22,12 +22,12 @@
   margin-left: 8px;
 }
 
-.p-button {
-  width: 100%;
-}
-
 .error-message {
   color: red;
   margin-top: 10px;
   font-size: 14px;
+}
+
+.login-btn {
+  margin-top: 15px;
 }
