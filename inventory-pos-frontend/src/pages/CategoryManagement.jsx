@@ -1,5 +1,13 @@
+import MenuBarComponent from "../components/MenuBarComponent";
+
 const CategoryManagement = () => {
-  return <div>category</div>;
+  const userRole = localStorage.getItem("userRole");
+
+  return (
+    <>
+      <MenuBarComponent userRole={userRole} />
+    </>
+  );
 };
 
 export default CategoryManagement;

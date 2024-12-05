@@ -1,5 +1,13 @@
+import MenuBarComponent from "../components/MenuBarComponent";
+
 const Billing = () => {
-  return <div>biling</div>;
+  const userRole = localStorage.getItem("userRole");
+
+  return (
+    <>
+      <MenuBarComponent userRole={userRole} />
+    </>
+  );
 };
 
 export default Billing;

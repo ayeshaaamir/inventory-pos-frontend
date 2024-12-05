@@ -1,5 +1,13 @@
+import MenuBarComponent from "../components/MenuBarComponent";
+
 const Reports = () => {
-  return <div>reports</div>;
+  const userRole = localStorage.getItem("userRole");
+
+  return (
+    <>
+      <MenuBarComponent userRole={userRole} />
+    </>
+  );
 };
 
 export default Reports;

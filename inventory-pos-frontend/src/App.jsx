@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
-  Route,
   Routes,
+  Route,
   Navigate,
 } from "react-router-dom";
 import NotFound from "./pages/Not-Found";
@@ -36,13 +36,9 @@ const App = () => {
         <Route
           path="/billing"
           element={
-            userRole === "employee" ? (
-              <ProtectedRoute>
-                <Billing />
-              </ProtectedRoute>
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )
+            <ProtectedRoute>
+              <Billing />
+            </ProtectedRoute>
           }
         />
 
@@ -58,28 +54,43 @@ const App = () => {
             )
           }
         />
+
         <Route
           path="/category-management"
           element={
-            <ProtectedRoute>
-              <CategoryManagement />
-            </ProtectedRoute>
+            userRole !== "employee" ? (
+              <ProtectedRoute>
+                <CategoryManagement />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
           }
         />
+
         <Route
           path="/product-management"
           element={
-            <ProtectedRoute>
-              <ProductManagement />
-            </ProtectedRoute>
+            userRole !== "employee" ? (
+              <ProtectedRoute>
+                <ProductManagement />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
           }
         />
+
         <Route
           path="/reports"
           element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
+            userRole !== "employee" ? (
+              <ProtectedRoute>
+                <Reports />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
           }
         />
 

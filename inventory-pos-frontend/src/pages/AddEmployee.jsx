@@ -1,5 +1,13 @@
+import MenuBarComponent from "../components/MenuBarComponent";
+
 const AddEmployee = () => {
-  return <div>employee</div>;
+  const userRole = localStorage.getItem("userRole");
+
+  return (
+    <>
+      <MenuBarComponent userRole={userRole} />
+    </>
+  );
 };
 
 export default AddEmployee;

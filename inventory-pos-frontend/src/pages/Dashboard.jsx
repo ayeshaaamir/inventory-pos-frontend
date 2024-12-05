@@ -1,25 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
-import { eraseCookie } from "../utils/cookieUtils";
-import { Menubar } from "primereact/menubar";
+import MenuBarComponent from "../components/MenuBarComponent";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const userRole = localStorage.getItem("userRole");
-
-  const handleLogout = () => {
-    eraseCookie("token");
-    eraseCookie("userRole");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userRole");
-    navigate("/login", { replace: true });
-    window.location.reload();
-  };
 
   const chartData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May"],
@@ -39,45 +24,6 @@ const Dashboard = () => {
     maintainAspectRatio: false,
   };
 
-  const menuItems = [
-    {
-      label: "Dashboard",
-      icon: "pi pi-home",
-      command: () => navigate("/dashboard"),
-    },
-    {
-      label: "Product Management",
-      icon: "pi pi-cog",
-      command: () => navigate("/product-management"),
-      visible: userRole !== "employee",
-    },
-    {
-      label: "Category Management",
-      icon: "pi pi-th-large",
-      command: () => navigate("/category-management"),
-      visible: userRole !== "employee",
-    },
-    {
-      label: "Add Employee",
-      icon: "pi pi-user-plus",
-      command: () => navigate("/add-employee"),
-      visible: userRole !== "employee",
-    },
-    {
-      label: "Reports",
-      icon: "pi pi-chart-bar",
-      command: () => navigate("/reports"),
-      visible: userRole !== "employee",
-    },
-    {
-      label: "Billing",
-      icon: "pi pi-wallet",
-      command: () => navigate("/billing"),
-    },
-  ];
-
-  const filteredMenuItems = menuItems.filter((item) => item.visible !== false);
-
   const transactions = [
     { id: 1, name: "John Doe", date: "2024-12-01", amount: "$150" },
     { id: 2, name: "Jane Smith", date: "2024-12-02", amount: "$250" },
@@ -87,16 +33,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Menubar
-        model={filteredMenuItems}
-        end={
-          <Button
-            label="Logout"
-            icon="pi pi-power-off"
-            onClick={handleLogout}
-          />
-        }
-      />
+      <MenuBarComponent userRole={userRole} />
 
       <div className="content">
         <div className="chart-container">
