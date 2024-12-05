@@ -108,7 +108,7 @@ const Login = () => {
             label="Login"
             icon="pi pi-sign-in"
             onClick={handleLogin}
-            className="p-button-rounded p-button-success p-mt-3"
+            className="p-button-rounded p-button-success p-mt-3 login-btn"
             disabled={!username || !password}
           />
 
