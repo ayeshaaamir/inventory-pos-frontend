@@ -40,6 +40,7 @@ const ProductManagement = () => {
     <>
       <Toast ref={toast} />
       <MenuBarComponent userRole={userRole} />
+      <h2>Product Management</h2>
       <div className="p-4">
         <div className="p-d-flex p-jc-between p-ai-center">
           <button
