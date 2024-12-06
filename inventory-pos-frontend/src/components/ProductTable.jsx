@@ -7,11 +7,22 @@ import { Toast } from "primereact/toast";
 import useInventory from "../hooks/useInventory";
 import { useState, useRef } from "react";
 
-const ProductTable = ({ onEdit }) => {
+const ProductTable = ({ onEdit, searchQuery }) => {
   const { inventory, deleteProduct } = useInventory();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const toast = useRef(null);
+
+  const filteredInventory = inventory.filter((product) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      (product.barcode && product.barcode.toLowerCase().includes(query)) ||
+      (product.item_name && product.item_name.toLowerCase().includes(query)) ||
+      (product.design_no && product.design_no.toLowerCase().includes(query)) ||
+      (product.size && product.size.toLowerCase().includes(query)) ||
+      (product.description && product.description.toLowerCase().includes(query))
+    );
+  });
 
   const deleteProductHandler = () => {
     deleteProduct(productToDelete.barcode)
@@ -77,7 +88,7 @@ const ProductTable = ({ onEdit }) => {
       <Toast ref={toast} />
 
       <DataTable
-        value={inventory}
+        value={filteredInventory}
         paginator
         rows={10}
         className="p-datatable-sm"
@@ -126,6 +137,7 @@ const ProductTable = ({ onEdit }) => {
 
 ProductTable.propTypes = {
   onEdit: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
 };
 
 export default ProductTable;

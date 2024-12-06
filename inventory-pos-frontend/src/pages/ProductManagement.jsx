@@ -10,6 +10,7 @@ const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const toast = useRef(null);
 
   const handleAddProduct = () => {
@@ -40,13 +41,26 @@ const ProductManagement = () => {
       <Toast ref={toast} />
       <MenuBarComponent userRole={userRole} />
       <div className="p-4">
-        <button
-          className="p-button p-button-primary mb-4 mt-6"
-          onClick={handleAddProduct}
-        >
-          Add Product
-        </button>
-        <ProductTable onEdit={handleEditProduct} refreshKey={refreshKey} />
+        <div className="p-d-flex p-jc-between p-ai-center">
+          <button
+            className="p-button p-button-primary mb-4 mt-6"
+            onClick={handleAddProduct}
+          >
+            Add Product
+          </button>
+          <input
+            type="text"
+            placeholder="Search Products"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="p-inputtext p-component p-mr-3 ml-6"
+          />
+        </div>
+        <ProductTable
+          onEdit={handleEditProduct}
+          refreshKey={refreshKey}
+          searchQuery={searchQuery}
+        />
         {showModal && (
           <AddProductModal
             visible={showModal}
@@ -58,5 +72,6 @@ const ProductManagement = () => {
     </>
   );
 };
+
 
 export default ProductManagement;
