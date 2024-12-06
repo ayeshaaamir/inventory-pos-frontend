@@ -22,9 +22,22 @@ const deleteProduct = async (barcode) => {
   });
 };
 
+const generateBarcode = async (barcode, quantity) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/barcode/print`, {
+      barcode,
+      quantity,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error.message;
+  }
+};
+
 export default {
   getInventory,
   addProduct,
   updateProduct,
   deleteProduct,
+  generateBarcode
 };

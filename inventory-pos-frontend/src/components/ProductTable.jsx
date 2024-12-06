@@ -6,11 +6,16 @@ import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
 import useInventory from "../hooks/useInventory";
 import { useState, useRef } from "react";
+import { InputText } from "primereact/inputtext";
+import generateBarcode from "../services/inventoryService";
 
 const ProductTable = ({ onEdit, searchQuery }) => {
   const { inventory, deleteProduct } = useInventory();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [showBarcodeModal, setShowBarcodeModal] = useState(false);
+  const [barcode, setBarcode] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const toast = useRef(null);
 
   const filteredInventory = inventory.filter((product) => {
@@ -51,12 +56,29 @@ const ProductTable = ({ onEdit, searchQuery }) => {
   };
 
   const generateBarcodeHandler = (product) => {
-    toast.current.show({
-      severity: "info",
-      summary: "Generating Barcode",
-      detail: `Barcode generated for product: ${product.item_name}`,
-      life: 3000,
-    });
+    setBarcode(product.barcode);
+    setShowBarcodeModal(true);
+  };
+
+  const handleGenerateBarcodeSubmit = async () => {
+    try {
+      await generateBarcode.generateBarcode(barcode, quantity);
+      toast.current.show({
+        severity: "success",
+        summary: "Barcode Generated",
+        detail: `Barcode for ${barcode} printed successfully.`,
+        life: 3000,
+      });
+      setShowBarcodeModal(false);
+    } catch (error) {
+      console.log(error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to generate barcode.",
+        life: 3000,
+      });
+    }
   };
 
   const actionBodyTemplate = (rowData) => (
@@ -130,6 +152,44 @@ const ProductTable = ({ onEdit, searchQuery }) => {
           Are you sure you want to delete the product:{" "}
           <strong>{productToDelete?.item_name}</strong>?
         </p>
+      </Dialog>
+
+      {/* Barcode Modal */}
+      <Dialog
+        visible={showBarcodeModal}
+        onHide={() => setShowBarcodeModal(false)}
+        header="Generate Barcode"
+        footer={
+          <>
+            <Button
+              label="Cancel"
+              icon="pi pi-times"
+              onClick={() => setShowBarcodeModal(false)}
+              className="p-button-text"
+            />
+            <Button
+              label="Generate"
+              icon="pi pi-check"
+              onClick={handleGenerateBarcodeSubmit}
+              className="p-button-success"
+            />
+          </>
+        }
+      >
+        <div className="p-field">
+          <label htmlFor="barcode">Barcode</label>
+          <InputText id="barcode" value={barcode} disabled />
+        </div>
+        <div className="p-field">
+          <label htmlFor="quantity">Quantity</label>
+          <InputText
+            id="quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            type="number"
+            min={1}
+          />
+        </div>
       </Dialog>
     </>
   );
