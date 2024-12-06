@@ -1,0 +1,101 @@
+/* Print Specific Styles for Receipt */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-container,
+  .receipt-container * {
+    visibility: visible;
+  }
+
+  .receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm; /* 80mm thermal printer width */
+    margin: 0;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    overflow: hidden;
+  }
+}
+
+/* Responsive Receipt Styling */
+.receipt-container {
+  max-width: 300px;
+  margin: 0 auto;
+  font-family: monospace;
+  border: 1px solid #ddd;
+  padding: 15px;
+}
+
+.receipt-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-container th,
+.receipt-container td {
+  padding: 5px;
+  text-align: left;
+}
+
+.receipt-container hr {
+  border: none;
+  border-top: 1px dashed #000;
+  margin: 10px 0;
+}
+
+.barcode-wrapper {
+  text-align: center;
+  margin: 0 auto;
+  overflow: hidden; /* Ensures no content spills outside */
+  max-width: 90%; /* Keep it within the page width */
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .receipt-container, .receipt-container * {
+    visibility: visible;
+  }
+  .receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-container, 
+  .receipt-container * {
+    visibility: visible;
+  }
+
+  .receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    page-break-inside: avoid;
+  }
+
+  .modal, 
+  .p-dialog {
+    position: static !important;
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+
+  .p-dialog-content {
+    overflow: visible !important;
+  }
+}

@@ -9,3 +9,11 @@
 .ml-6 {
     margin-left: 6px;
 }
+
+.font-bold {
+    font-weight: bolder;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
