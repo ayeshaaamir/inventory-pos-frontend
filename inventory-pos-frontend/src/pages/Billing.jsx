@@ -120,23 +120,23 @@ const Billing = () => {
     setTotalPrice(newTotalPrice);
     setEditableTotal(newTotalPrice);
   };
-
+  
   const processCheckout = async () => {
     try {
       const discount = totalPrice - editableTotal;
-
+  
       const cart = cartItems.map((item) => ({
         barcode: item.barcode,
         quantity: item.quantity,
       }));
-
+  
       const formattedPaymentType =
         paymentMethod === "CASH"
           ? "Cash"
           : paymentMethod === "CARD"
           ? "Card"
           : null;
-
+  
       if (!formattedPaymentType) {
         toastRef.current.show({
           severity: "error",
@@ -145,16 +145,16 @@ const Billing = () => {
         });
         return;
       }
-
+  
       const saleData = {
         cart,
         paymentType: formattedPaymentType,
         paidAmount: editableTotal,
         discount: discount.toFixed(2),
       };
-
+  
       const receipt = await SalesService.processSale(saleData);
-
+  
       const completeReceipt = {
         ...receipt,
         items: cart,
@@ -164,9 +164,17 @@ const Billing = () => {
         paymentType: formattedPaymentType,
         fullCartItems: cartItems,
       };
-
+  
       setSaleReceipt(completeReceipt);
       setShowReceiptDialog(true);
+  
+      setCartItems([]);
+      setBarcode("");
+      setQuantity(1);
+      setEditableTotal(0);
+      setTotalPrice(0);
+      setPaymentMethod(null);
+  
     } catch (error) {
       console.error("Error processing sale:", error);
       toastRef.current.show({
