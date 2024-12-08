@@ -61,7 +61,7 @@ const MenuBarComponent = ({ userRole }) => {
     <Menubar
       model={filteredMenuItems}
       end={
-        <Button label="Logout" icon="pi pi-power-off" onClick={handleLogout} />
+        <Button icon="pi pi-power-off" onClick={handleLogout} />
       }
     />
   );
