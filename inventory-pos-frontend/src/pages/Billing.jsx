@@ -48,18 +48,39 @@ const Billing = () => {
   const addToCart = () => {
     if (!currentItem) return;
 
+    if (quantity > currentItem.stock) {
+      toastRef.current.show({
+        severity: "error",
+        summary: "Stock Limit",
+        detail: `Cannot add more than ${currentItem.stock} items to cart`,
+      });
+      return;
+    }
+
     const existingItemIndex = cartItems.findIndex(
       (item) => item.barcode === currentItem.barcode
     );
 
     let updatedCartItems;
     if (existingItemIndex > -1) {
+      const existingQuantity = cartItems[existingItemIndex].quantity;
+      const totalRequestedQuantity = existingQuantity + quantity;
+
+      if (totalRequestedQuantity > currentItem.stock) {
+        toastRef.current.show({
+          severity: "error",
+          summary: "Stock Limit",
+          detail: `Cannot add more than ${currentItem.stock} items to cart`,
+        });
+        return;
+      }
+
       updatedCartItems = cartItems.map((item, index) =>
         index === existingItemIndex
           ? {
               ...item,
-              quantity: item.quantity + quantity,
-              lineTotal: (item.quantity + quantity) * item.price,
+              quantity: totalRequestedQuantity,
+              lineTotal: totalRequestedQuantity * item.price,
             }
           : item
       );
