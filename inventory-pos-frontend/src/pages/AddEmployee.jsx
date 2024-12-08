@@ -7,7 +7,7 @@ import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
 import MenuBarComponent from "../components/MenuBarComponent";
 import useForm from "../hooks/useForm";
-import { validateForm, isFormDisabled } from "../utils/validation";
+import { validateForm, isFormDisabled } from "../utils/validationUtils";
 import { addEmployee } from "../services/employeeService";
 
 const AddEmployee = () => {
