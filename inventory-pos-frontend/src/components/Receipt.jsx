@@ -4,10 +4,7 @@ import "../styles/Receipt.css";
 
 const ReceiptComponent = ({ receipt }) => {
   const currentDate = new Date().toLocaleString();
-  const receiptItems = receipt.items || [];
-
-  console.log(receiptItems);
-  console.log(receipt);
+  const receiptItems = receipt.fullCartItems || receipt.items || [];
 
   return (
     <div className="receipt-container p-4">
@@ -36,17 +33,18 @@ const ReceiptComponent = ({ receipt }) => {
           </tr>
         </thead>
         <tbody>
-          {receipt.items &&
-            receiptItems.map((item, index) => (
-              <tr key={index}>
-                <td>{item.item_name}</td>
-                <td className="text-right">{item.quantity}</td>
-                <td className="text-right">£{item.price.toFixed(2)}</td>
-                <td className="text-right">
-                  £{(item.quantity * item.price).toFixed(2)}
-                </td>
-              </tr>
-            ))}
+          {receiptItems.map((item, index) => (
+            <tr key={index}>
+              <td>{item.item_name}</td>
+              <td className="text-right">{item.quantity}</td>
+              <td className="text-right">
+                £{parseFloat(item.price).toFixed(2)}
+              </td>
+              <td className="text-right">
+                £{(item.quantity * parseFloat(item.price)).toFixed(2)}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
@@ -55,39 +53,33 @@ const ReceiptComponent = ({ receipt }) => {
       <div className="mb-3">
         <div className="flex justify-content-between">
           <span className="font-bold">Subtotal:</span>
-          <span>
-            £
-            {(
-              parseFloat(receipt.paidAmount) + parseFloat(receipt.discount)
-            ).toFixed(2)}
-          </span>
+          <span>£{parseFloat(receipt.total || 0).toFixed(2)}</span>
         </div>
         <div className="flex justify-content-between">
           <span className="font-bold">Discount:</span>
-          <span>£{parseFloat(receipt.discount).toFixed(2)}</span>
+          <span>£{parseFloat(receipt.discount || 0).toFixed(2)}</span>
         </div>
         <div className="flex justify-content-between font-bold">
           <span className="font-bold">Total:</span>
-          <span>£{parseFloat(receipt.paidAmount).toFixed(2)}</span>
+          <span>£{parseFloat(receipt.paidAmount || 0).toFixed(2)}</span>
         </div>
-        {/* <div className="flex justify-content-between">
+        <div className="flex justify-content-between mt-2">
           <span className="font-bold">Payment Method:</span>
-          <span>{receipt.paymentType}</span>
-        </div> */}
+          <span>{receipt.paymentType || "N/A"}</span>
+        </div>
       </div>
 
       <hr />
 
       <div className="barcode-wrapper">
         <Barcode
-          value={receipt.barcode}
+          value={receipt.barcode || "N/A"}
           width={1.5}
           height={40}
           displayValue={false}
         />
         <div className="flex justify-content-between">
-          {/* <span className="font-bold">Sale Barcode:</span> */}
-          <span>{receipt.barcode}</span>
+          <span>{receipt.barcode || "N/A"}</span>
         </div>
       </div>
 
@@ -107,7 +99,7 @@ const ReceiptComponent = ({ receipt }) => {
           for hygiene reasons.
         </p>
         <p>
-          Recommended dry cleaning only; we don’t guarantee materials, colours,
+          Recommended dry cleaning only; we dont guarantee materials, colours,
           slippage, or embellishments (including stones).
         </p>
         <p>
@@ -121,20 +113,25 @@ const ReceiptComponent = ({ receipt }) => {
 
 ReceiptComponent.propTypes = {
   receipt: PropTypes.shape({
-    barcode: PropTypes.string.isRequired,
+    barcode: PropTypes.string,
     items: PropTypes.arrayOf(
+      PropTypes.shape({
+        barcode: PropTypes.string,
+        quantity: PropTypes.number.isRequired,
+      })
+    ),
+    fullCartItems: PropTypes.arrayOf(
       PropTypes.shape({
         item_name: PropTypes.string.isRequired,
         quantity: PropTypes.number.isRequired,
-        price: PropTypes.number.isRequired,
-        lineTotal: PropTypes.number.isRequired,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
       })
-    ).isRequired,
-    paidAmount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
-    discount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
-    paymentType: PropTypes.string.isRequired,
+    ),
+    total: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    paidAmount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    discount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    paymentType: PropTypes.string,
   }).isRequired,
 };
 

@@ -9,10 +9,7 @@ import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 
 import MenuBarComponent from "../components/MenuBarComponent";
-import {
-  InventoryService,
-  SalesService,
-} from "../services/billingService";
+import { InventoryService, SalesService } from "../services/billingService";
 import ReceiptComponent from "../components/Receipt";
 
 const Billing = () => {
@@ -51,13 +48,30 @@ const Billing = () => {
   const addToCart = () => {
     if (!currentItem) return;
 
-    const newCartItem = {
-      ...currentItem,
-      quantity,
-      lineTotal: currentItem.price * quantity,
-    };
+    const existingItemIndex = cartItems.findIndex(
+      (item) => item.barcode === currentItem.barcode
+    );
 
-    const updatedCartItems = [...cartItems, newCartItem];
+    let updatedCartItems;
+    if (existingItemIndex > -1) {
+      updatedCartItems = cartItems.map((item, index) =>
+        index === existingItemIndex
+          ? {
+              ...item,
+              quantity: item.quantity + quantity,
+              lineTotal: (item.quantity + quantity) * item.price,
+            }
+          : item
+      );
+    } else {
+      const newCartItem = {
+        ...currentItem,
+        quantity,
+        lineTotal: currentItem.price * quantity,
+      };
+      updatedCartItems = [...cartItems, newCartItem];
+    }
+
     setCartItems(updatedCartItems);
 
     const newTotalPrice = updatedCartItems.reduce(
@@ -73,7 +87,9 @@ const Billing = () => {
   };
 
   const removeFromCart = (barcode) => {
-    const updatedCartItems = cartItems.filter((item) => item.barcode !== barcode);
+    const updatedCartItems = cartItems.filter(
+      (item) => item.barcode !== barcode
+    );
     setCartItems(updatedCartItems);
 
     const newTotalPrice = updatedCartItems.reduce(
@@ -94,7 +110,11 @@ const Billing = () => {
       }));
 
       const formattedPaymentType =
-        paymentMethod === "CASH" ? "Cash" : paymentMethod === "CARD" ? "Card" : null;
+        paymentMethod === "CASH"
+          ? "Cash"
+          : paymentMethod === "CARD"
+          ? "Card"
+          : null;
 
       if (!formattedPaymentType) {
         toastRef.current.show({
@@ -113,7 +133,18 @@ const Billing = () => {
       };
 
       const receipt = await SalesService.processSale(saleData);
-      setSaleReceipt(receipt);
+
+      const completeReceipt = {
+        ...receipt,
+        items: cart,
+        total: totalPrice,
+        paidAmount: editableTotal,
+        discount: discount.toFixed(2),
+        paymentType: formattedPaymentType,
+        fullCartItems: cartItems,
+      };
+
+      setSaleReceipt(completeReceipt);
       setShowReceiptDialog(true);
     } catch (error) {
       console.error("Error processing sale:", error);
@@ -159,8 +190,9 @@ const Billing = () => {
 
             {currentItem && (
               <div className="mt-3">
-                <h4>{currentItem.item_name}</h4>
-                <p>Price: £{currentItem.price}</p>
+                <h4>Product name: {currentItem.item_name}</h4>
+                <h4>In stock: {currentItem.stock}</h4>
+                <h4>Price: £{currentItem.price}</h4>
                 <div className="p-inputgroup">
                   <Button
                     icon="pi pi-minus"
@@ -181,7 +213,6 @@ const Billing = () => {
             )}
           </div>
 
-          {/* Cart Section */}
           <div className="col-12 md:col-6">
             <DataTable value={cartItems}>
               <Column field="item_name" header="Item" />
@@ -236,8 +267,11 @@ const Billing = () => {
       >
         {saleReceipt && (
           <div>
-            <ReceiptComponent receipt={saleReceipt} visible={showReceiptDialog}
-        onHide={() => setShowReceiptDialog(false)}/>
+            <ReceiptComponent
+              receipt={saleReceipt}
+              visible={showReceiptDialog}
+              onHide={() => setShowReceiptDialog(false)}
+            />
             <div className="mt-3 pt-10 flex justify-content-between">
               <Button label="Print Receipt" onClick={confirmPrint} />
               <Button
