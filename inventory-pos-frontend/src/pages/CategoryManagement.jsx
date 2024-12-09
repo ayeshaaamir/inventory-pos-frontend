@@ -1,5 +1,3 @@
-// components/CategoryManagement.jsx
-
 import { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -36,7 +34,7 @@ const CategoryManagement = () => {
   const fetchCategories = async () => {
     try {
       const data = await getCategories();
-      setCategories(data.categories); // Access the 'categories' array from the response
+      setCategories(data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -65,15 +63,12 @@ const CategoryManagement = () => {
 
   const handleSaveCategory = async () => {
     try {
-      // Prepare the payload by removing the id from the categoryData if it's not needed
-      const { id, ...categoryPayload } = categoryData;
+      const { id, name, description } = categoryData;
 
       if (isEditMode) {
-        // Send the updated category data without the id if it's not required
-        await updateCategory(id, categoryPayload);
+        await updateCategory({ id, name, description });
       } else {
-        // Send the new category data without the id
-        await addCategory(categoryPayload);
+        await addCategory({ name, description });
       }
 
       fetchCategories();
