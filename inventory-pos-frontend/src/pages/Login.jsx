@@ -10,7 +10,7 @@ import authService from "../services/authService";
 import { setCookie } from "../utils/cookieUtils";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
-import "../styles/Login.css";
+import "../styles/login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");

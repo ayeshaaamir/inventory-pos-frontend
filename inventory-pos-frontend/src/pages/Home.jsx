@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Carousel } from "primereact/carousel";
 import { useNavigate } from "react-router-dom";
-import "../styles/Home.css";
+import "../styles/home.css";
 
 const Home = () => {
   const navigate = useNavigate();
