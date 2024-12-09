@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../config/constants";
 
 const API_URL_CATEGORIES = `${API_BASE_URL}/categories`;
 
-const categoriesService = {
+export const categoriesService = {
   getCategories: async () => {
     try {
       const response = await axios.get(API_URL_CATEGORIES);

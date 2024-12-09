@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import Barcode from "react-barcode";
-import "../styles/Receipt.css";
+import "../styles/receipt.css";
 
 const ReceiptComponent = ({ receipt }) => {
   const currentDate = new Date().toLocaleString();

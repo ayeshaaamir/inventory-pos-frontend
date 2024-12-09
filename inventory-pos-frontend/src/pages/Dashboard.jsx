@@ -2,6 +2,7 @@ import { Chart } from "primereact/chart";
 import MenuBarComponent from "../components/MenuBarComponent";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import "../styles/dashboard.css";
 
 const Dashboard = () => {
   const userRole = localStorage.getItem("userRole");
